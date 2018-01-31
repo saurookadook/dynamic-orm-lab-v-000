@@ -60,15 +60,10 @@ class InteractiveRecord
 
   def self.find_by(hash)
     # binding.pry
-    col_name = hash.keys[0]
-    col_value = hash.values_at(col_name)[0]
-    if col_value.is_a? String
-      sql = "SELECT * FROM #{self.table_name} WHERE #{col_name.to_s} = '#{col_value}'"
+    hash_val = hash.values.first
+    formatted_col_value = hash_val.class == Fixnum ? hash_val : "'#{hash_val}'"
+      sql = "SELECT * FROM #{self.table_name} WHERE #{hash.keys.first.to_s} = #{formatted_col_value}"
       DB[:conn].execute(sql)
-    elsif col_value.is_a? Integer
-      sql = "SELECT * FROM #{self.table_name} WHERE #{col_name.to_s} = #{col_value}"
-      DB[:conn].execute(sql)
-    end
   end
 
 end
